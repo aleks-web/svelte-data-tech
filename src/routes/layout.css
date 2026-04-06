@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@source "../node_modules/flowbite-svelte-icons/dist";
+
+body {
+    height: 100dvh;
+    background: #deeeff;
+}
+
+:root {
+    --gap: calc(var(--spacing) * 2);
+    --header-height: 75px;
+    --mobile-menu-height: calc(100svh - var(--header-height) - calc(var(--gap) * 3));
+    --aside-height: calc(100svh - var(--header-height) - calc(var(--gap) * 3));
+}

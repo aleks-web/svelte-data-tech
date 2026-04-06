@@ -5,8 +5,8 @@ CREATE TABLE `chats` (
 );
 --> statement-breakpoint
 CREATE TABLE `chats_sites` (
-	`chat_id` varchar(200),
-	`domain` varchar(30)
+	`chat_id` varchar(200) NOT NULL,
+	`domain` varchar(30) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `sites` (

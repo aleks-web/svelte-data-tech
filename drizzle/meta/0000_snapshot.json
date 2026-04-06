@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "5f569ad7-bb33-43f1-be12-2ff4d9df6584",
+  "id": "00b58c94-d4da-4512-a52c-472f46c328ac",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "chats": {
@@ -42,14 +42,14 @@
           "name": "chat_id",
           "type": "varchar(200)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "domain": {
           "name": "domain",
           "type": "varchar(30)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         }
       },

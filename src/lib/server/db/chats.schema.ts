@@ -3,7 +3,7 @@ import { relations } from 'drizzle-orm';
 
 export const sites = mysqlTable('sites', {
 	domain: varchar('domain', { length: 30 }).primaryKey(),
-	createdAt: timestamp('created_at').defaultNow()
+	createdAt: timestamp('created_at').defaultNow().notNull()
 });
 
 export const chats = mysqlTable('chats', {

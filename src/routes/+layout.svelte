@@ -19,14 +19,21 @@
         <div class="flex gap-[inherit]">
             <Sidebar>
                 <a
-                    class:active={ page.route.id === resolve('/connection') }
-                    class="border-2 border-solid border-blue-800 flex min-w-max [.active]:bg-blue-800 [.active]:text-white gap-1 text-blue-800 hover:bg-blue-800 p-3 rounded-xl hover:text-blue-100 transition-all" href="{resolve('/connection')}">
+                        class:active={ page.route.id === resolve('/sites') }
+                        class="border-2 border-solid border-blue-800 flex min-w-max [.active]:bg-blue-800 [.active]:text-white gap-1 text-blue-800 hover:bg-blue-800 p-3 rounded-xl hover:text-blue-100 transition-all" href="{resolve('/sites')}">
                     <AddressBookOutline class="w-6" />
-                    <span>Связь</span>
+                    <span>Сайты</span>
+                </a>
+
+                <a
+                    class:active={ page.route.id === resolve('/test') }
+                    class="border-2 border-solid border-blue-800 flex min-w-max [.active]:bg-blue-800 [.active]:text-white gap-1 text-blue-800 hover:bg-blue-800 p-3 rounded-xl hover:text-blue-100 transition-all" href="{resolve('/test')}">
+                    <AddressBookOutline class="w-6" />
+                    <span>Test</span>
                 </a>
             </Sidebar>
 
-            <div class="flex w-full flex-col bg-white gap-[inherit] overflow-hidden rounded-2xl p-4">
+            <div class="flex w-full flex-col bg-white gap-[inherit] overflow-x-hidden overflow-y-auto rounded-2xl h-[var(--content-height)]">
                 {@render children()}
             </div>
         </div>

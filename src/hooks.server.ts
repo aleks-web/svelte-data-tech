@@ -23,7 +23,30 @@ const handleDbCreator: Handle = async ({ event, resolve }) => {
 	if (!sitesResult.length) {
 		await db
 			.insert(sites)
-			.values([{ domain: 'data.local' }, { domain: 'test' }, { domain: 'test.local' }])
+			.values([
+				{ domain: 'data.local' },
+				{ domain: 'test' },
+				{ domain: 'test.local' },
+				{ domain: 'test2.local' },
+				{ domain: 'test3.local' },
+				{ domain: 'test4.local' },
+				{ domain: 'test5.local' },
+				{ domain: 'test6.local' },
+				{ domain: 'test7.local' },
+				{ domain: 'test8.local' },
+				{ domain: 'test9.local' },
+				{ domain: 'test10.local' },
+				{ domain: 'test11.local' },
+				{ domain: 'test12.local' },
+				{ domain: 'test13.local' },
+				{ domain: 'test14.local' },
+				{ domain: 'test15.local' },
+				{ domain: 'test16.local' },
+				{ domain: 'test17.local' },
+				{ domain: 'test18.local' },
+				{ domain: 'test19.local' },
+				{ domain: 'test20.local' }
+			])
 			.$returningId();
 
 		// await db

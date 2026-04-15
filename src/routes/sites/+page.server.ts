@@ -6,7 +6,11 @@ import { db } from '$lib/server/db';
 import { sites } from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async (event) => {
-	const sitesResult = await db.query.sites.findMany({limit: 10, offset: 0, with: { chats: true }});
+	const sitesResult = await db.query.sites.findMany({
+		limit: 10,
+		offset: 0,
+		with: { chats: true }
+	});
 
 	return { sites: sitesResult };
 };

@@ -6,6 +6,9 @@ import { db } from '$lib/server/db';
 import { sites } from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async (event) => {
+
+	console.log(event);
+
 	const sitesResult = await db.query.sites.findMany({
 		limit: 10,
 		offset: 0,

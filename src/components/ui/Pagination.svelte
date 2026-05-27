@@ -2,24 +2,30 @@
     import { createPagination, melt } from '@melt-ui/svelte';
     import { twMerge } from "tailwind-merge";
 
-    let { class: className, count, perPage, defaultPage, onPageChange = (s) => s.next }: { class?: string, count: number, perPage: number, defaultPage: number, onPageChange?: (state: { curr: number, next: number }) => number } = $props();
+    let { class: className, count, perPage, defaultPage, siblingCount = 1, onPageChange = (s) => s.next }: { class?: string, count: number, siblingCount?: number, perPage: number, defaultPage: number, onPageChange?: (state: { curr: number, next: number }) => number } = $props();
+
+    const countElements = (() => count)();
+    const perPageItems = (() => perPage)();
+    const defaultPaginationPage = (() => defaultPage)();
+    const sibCount = (() => siblingCount)();
+    const onPageChangeFn = (() => onPageChange)();
 
     const btn = `
 		flex items-center justify-center h-8 w-8 aspect-1 rounded-md border-1 border-blue-800 text-blue-800 text-sm transition-colors cursor-pointer
 		hover:opacity-75
 		disabled:pointer-events-none disabled:opacity-40
-		data-[selected]:bg-blue-900 data-[selected]:border-blue-900 data-[selected]:text-white
+		data-[selected]:bg-blue-900 data-[selected]:border-blue-900 data-[selected]:text-white data-[selected]:pointer-events-none data-[selected]:scale-105
 	`;
 
     const {
         elements: { root, pageTrigger, prevButton, nextButton },
         states: { pages, range, page },
     } = createPagination({
-        count: count,
-        perPage: perPage,
-        defaultPage: defaultPage,
-        siblingCount: 1,
-        onPageChange: onPageChange
+        count: countElements,
+        perPage: perPageItems,
+        defaultPage: defaultPaginationPage,
+        siblingCount: sibCount,
+        onPageChange: onPageChangeFn
     });
 </script>
 
@@ -31,7 +37,6 @@
                 <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
             </svg>
         </button>
-
         {#each $pages as page (page.key)}
             {#if page.type === 'ellipsis'}
                 <span>...</span>

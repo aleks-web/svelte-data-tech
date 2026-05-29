@@ -21,10 +21,10 @@
         elements: { root, pageTrigger, prevButton, nextButton },
         states: { pages, range, page },
     } = createPagination({
-        count: countElements,
-        perPage: perPageItems,
-        defaultPage: defaultPaginationPage,
-        siblingCount: sibCount,
+        count: countElements, // countElements
+        perPage: perPageItems, // perPageItems
+        defaultPage: defaultPaginationPage, // defaultPaginationPage
+        siblingCount: sibCount, // siblingCount
         onPageChange: onPageChangeFn
     });
 </script>

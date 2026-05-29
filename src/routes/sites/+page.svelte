@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import type { ActionResult } from '@sveltejs/kit';
-	import {goto, invalidateAll} from '$app/navigation';
+	import { goto, invalidateAll, refreshAll } from '$app/navigation';
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import { deserialize } from '$app/forms';
@@ -10,6 +10,10 @@
 	import Pagination from "$components/ui/Pagination.svelte";
 
 	let { data }: PageProps = $props();
+
+	$effect(() => {
+		console.log(data);
+	});
 
 	const trCl = "group/tr transition-all bg-blue-50 h-[55px]";
 	const dtCl = "px-4 border-b border-b-blue-100 border-x border-blue-100 transition-colors first:border-l-0 last:border-r-0 group-hover/tr:bg-blue-100 group-hover/tr:border-blue-200 group-[.last]/tr:border-b-0";
@@ -40,7 +44,7 @@
 	<h2 class="font-bold text-[20px] md:text-[25px] xl:text-[30px]">Сайты</h2>
 </div>
 
-<Pagination count={data.sites.length} perPage={1} defaultPage={1} onPageChange={(state) => { goto(resolve(`/sites?page=${state.next}`)); return state.next; }} />
+<Pagination count={data.total} perPage={data.pageSize} defaultPage={data.currentPage} onPageChange={(state) => { goto(resolve(`/sites?page=${state.next}`)); return state.next; }} />
 
 <div class="h-full mx-4 mb-4 overflow-auto overflow-x-hidden rounded-xl bg-blue-50">
 		<table class="w-full">

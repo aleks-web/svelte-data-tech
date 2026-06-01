@@ -2,7 +2,7 @@
 	import type { PageProps } from './$types';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { goto, invalidateAll, refreshAll } from '$app/navigation';
-	import { page } from '$app/state';
+	import { test } from '$lib';
 	import { resolve } from '$app/paths';
 	import { deserialize } from '$app/forms';
 	import { twMerge } from 'tailwind-merge';
@@ -12,7 +12,7 @@
 	let { data }: PageProps = $props();
 
 	$effect(() => {
-		console.log(data);
+		// console.log(data);
 	});
 
 	const trCl = "group/tr transition-all bg-blue-50 h-[55px]";

@@ -2,7 +2,8 @@
 	import type { PageProps } from './$types';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { goto, invalidateAll, refreshAll } from '$app/navigation';
-	import { test } from '$lib';
+	import { onMount } from 'svelte';
+	import { paginationStore, setPage, getStore } from '$lib';
 	import { resolve } from '$app/paths';
 	import { deserialize } from '$app/forms';
 	import { twMerge } from 'tailwind-merge';
@@ -13,6 +14,13 @@
 
 	$effect(() => {
 		// console.log(data);
+	});
+
+	onMount(() => {
+		setInterval(() => {
+			setPage(getStore().page + 1);
+			invalidateAll();
+		}, 1500);
 	});
 
 	const trCl = "group/tr transition-all bg-blue-50 h-[55px]";
@@ -45,6 +53,8 @@
 </div>
 
 <Pagination count={data.total} perPage={data.pageSize} defaultPage={data.currentPage} onPageChange={(state) => { goto(resolve(`/sites?page=${state.next}`)); return state.next; }} />
+
+{$paginationStore.page}
 
 <div class="h-full mx-4 mb-4 overflow-auto overflow-x-hidden rounded-xl bg-blue-50">
 		<table class="w-full">

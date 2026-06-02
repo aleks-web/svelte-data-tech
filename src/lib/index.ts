@@ -1,12 +1,22 @@
 import { writable, get } from 'svelte/store';
 
-export const test = writable(2);
+export const paginationStore = writable({
+	page: 1,
+	size: 3
+});
 
-export default test;
+export default paginationStore;
 
-test.subscribe((s) => {
+paginationStore.subscribe((s) => {
 	console.log(s);
 });
 
-test.set(6);
-console.log(get(test));
+export const setPage = (pageNumber: number) => {
+	const store = get(paginationStore);
+	store.page = pageNumber;
+	paginationStore.set(store);
+}
+
+export const getStore = () => {
+	return get(paginationStore);
+}

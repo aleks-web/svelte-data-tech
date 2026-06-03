@@ -1,14 +1,18 @@
 <script lang="ts">
     import { createPagination, melt } from '@melt-ui/svelte';
     import { twMerge } from "tailwind-merge";
+    import { type WritablePaginationType } from '$lib';
+    import { get } from 'svelte/store';
 
-    let { class: className, count, perPage, defaultPage, siblingCount = 1, onPageChange = (s) => s.next }: { class?: string, count: number, siblingCount?: number, perPage: number, defaultPage: number, onPageChange?: (state: { curr: number, next: number }) => number } = $props();
+    import { onMount } from 'svelte';
+
+    let { class: className, count, siblingCount = 1, pagination = $bindable(), onPageChange = (s) => s.next }: { class?: string, pagination: WritablePaginationType, count: number, siblingCount?: number, onPageChange?: (state: { curr: number, next: number }) => number } = $props();
 
     const countElements = (() => count)();
-    const perPageItems = (() => perPage)();
-    const defaultPaginationPage = (() => defaultPage)();
     const sibCount = (() => siblingCount)();
     const onPageChangeFn = (() => onPageChange)();
+
+    const paginationData = get(pagination);
 
     const btn = `
 		flex items-center justify-center h-8 w-8 aspect-1 rounded-md border-1 border-blue-800 text-blue-800 text-sm transition-colors cursor-pointer
@@ -19,15 +23,23 @@
 
     const {
         elements: { root, pageTrigger, prevButton, nextButton },
-        states: { pages, range, page },
+        states: { pages, page },
     } = createPagination({
         count: countElements, // countElements
-        perPage: perPageItems, // perPageItems
-        defaultPage: defaultPaginationPage, // defaultPaginationPage
+        perPage: paginationData.size, // perPageItems
+        defaultPage: paginationData.page, // defaultPaginationPage
         siblingCount: sibCount, // siblingCount
         onPageChange: onPageChangeFn
     });
+
+    onMount(() => {
+        pagination.subscribe((pagination) => {
+            page.set(pagination.page);
+        });
+    });
 </script>
+
+{$pagination.page}
 
 <nav class={twMerge(className, "flex flex-col items-center gap-4")} aria-label="pagination" use:melt={$root}>
 

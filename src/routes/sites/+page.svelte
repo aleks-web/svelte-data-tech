@@ -1,27 +1,16 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import type { ActionResult } from '@sveltejs/kit';
-	import { goto, invalidateAll, refreshAll } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { paginationStore, setPage, getStore } from '$lib';
+	import { goto, invalidateAll } from '$app/navigation';
+	import { paginationStore } from '$lib';
 	import { resolve } from '$app/paths';
 	import { deserialize } from '$app/forms';
+	import { browser } from '$app/environment';
 	import { twMerge } from 'tailwind-merge';
 	import DateTimeCol from "$components/other/DateTimeCol.svelte";
 	import Pagination from "$components/ui/Pagination.svelte";
 
 	let { data }: PageProps = $props();
-
-	$effect(() => {
-		// console.log(data);
-	});
-
-	onMount(() => {
-		setInterval(() => {
-			setPage(getStore().page + 1);
-			invalidateAll();
-		}, 1500);
-	});
 
 	const trCl = "group/tr transition-all bg-blue-50 h-[55px]";
 	const dtCl = "px-4 border-b border-b-blue-100 border-x border-blue-100 transition-colors first:border-l-0 last:border-r-0 group-hover/tr:bg-blue-100 group-hover/tr:border-blue-200 group-[.last]/tr:border-b-0";
@@ -39,6 +28,12 @@
 		const result: ActionResult = deserialize(await response.text());
 
 		if (result.type === 'success') {
+			data.sites.forEach((s, i) => {
+				if (s.domain == domain) {
+					data.sites.splice(i, 1);
+				}
+			});
+
 			await invalidateAll();
 		}
 	}
@@ -52,9 +47,7 @@
 	<h2 class="font-bold text-[20px] md:text-[25px] xl:text-[30px]">Сайты</h2>
 </div>
 
-<Pagination count={data.total} perPage={data.pageSize} defaultPage={data.currentPage} onPageChange={(state) => { goto(resolve(`/sites?page=${state.next}`)); return state.next; }} />
-
-{$paginationStore.page}
+<Pagination pagination={paginationStore.get()} count={data.total} onPageChange={(state) => { if (browser) { goto(resolve(`/sites?page=${state.next}`)) } return state.next; }} />
 
 <div class="h-full mx-4 mb-4 overflow-auto overflow-x-hidden rounded-xl bg-blue-50">
 		<table class="w-full">

@@ -5,7 +5,7 @@ const transporter = nodemailer.createTransport({
 	host: 'smtp.yandex.ru',
 	auth: {
 		user: 'dok.go@yandex.ru',
-		pass: 'wxjvdfpdrmuhiwdm'
+		pass: 'shvsehihnvgsofsc'
 	},
 	secure: true,
 	port: 465

@@ -25,9 +25,15 @@
                     <span>Сайты</span>
                 </a>
 
+                <a class:active={ page.route.id === resolve('/chats') }
+                        class="border-2 border-solid border-blue-800 flex min-w-max [.active]:bg-blue-800 [.active]:text-white gap-1 text-blue-800 hover:bg-blue-800 p-3 rounded-xl hover:text-blue-100 transition-all" href="{resolve('/chats')}">
+                    <AddressBookOutline class="w-6" />
+                    <span>Чаты</span>
+                </a>
+
                 <a
-                    class:active={ page.route.id === resolve('/test') }
-                    class="border-2 border-solid border-blue-800 flex min-w-max [.active]:bg-blue-800 [.active]:text-white gap-1 text-blue-800 hover:bg-blue-800 p-3 rounded-xl hover:text-blue-100 transition-all" href="{resolve('/test')}">
+                        class:active={ page.route.id === resolve('/test') }
+                        class="border-2 border-solid border-blue-800 flex min-w-max [.active]:bg-blue-800 [.active]:text-white gap-1 text-blue-800 hover:bg-blue-800 p-3 rounded-xl hover:text-blue-100 transition-all" href="{resolve('/test')}">
                     <AddressBookOutline class="w-6" />
                     <span>Test</span>
                 </a>

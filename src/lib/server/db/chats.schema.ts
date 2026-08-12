@@ -7,7 +7,7 @@ export const sites = mysqlTable('sites', {
 });
 
 export const chats = mysqlTable('chats', {
-	chatId: varchar('chat_id', { length: 200 }).primaryKey(),
+	chatId: varchar('chat_id', { length: 200 }).notNull().primaryKey(),
 	name: varchar('name', { length: 250 })
 });
 

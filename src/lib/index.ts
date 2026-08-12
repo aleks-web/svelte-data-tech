@@ -3,6 +3,7 @@ import { writable, get, type Writable } from 'svelte/store';
 export type PaginationType = {
 	page: number;
 	size: number;
+	total: number;
 };
 
 export type WritablePaginationType = Writable<PaginationType>;
@@ -10,17 +11,11 @@ export type WritablePaginationType = Writable<PaginationType>;
 export class paginationStore {
 	private static store: WritablePaginationType = writable({
 		page: 1,
-		size: 5
+		size: 5,
+		total: 0
 	});
 
-	private store: WritablePaginationType = writable({
-		page: 1,
-		size: 5
-	});
-
-	constructor() {
-
-	}
+	constructor() {}
 
 	public static get() {
 		return paginationStore.store;
@@ -42,6 +37,13 @@ export class paginationStore {
 
 	public static getCurrentPage() {
 		return paginationStore.getPaginationData().page;
+	}
+
+	public static setTotal(totalNumber: number) {
+		const store = paginationStore.get();
+		const storeData = paginationStore.getPaginationData();
+		storeData.total = totalNumber;
+		store.set(storeData);
 	}
 
 	public static getPaginationData() {

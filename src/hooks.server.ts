@@ -19,6 +19,14 @@ const handleBetterAuth: Handle = async ({ event, resolve }) => {
 
 const handleDbCreator: Handle = async ({ event, resolve }) => {
 	const sitesResult = await db.query.sites.findMany({ limit: 1, offset: 0, with: { chats: true } });
+	const chatsResult = await db.query.chats.findMany({ limit: 1, offset: 0 });
+
+	if (!chatsResult.length) {
+		await db
+			.insert(chats)
+			.values([{ chatId: '4003221145', name: 'test' }])
+			.$returningId();
+	}
 
 	if (!sitesResult.length) {
 		await db

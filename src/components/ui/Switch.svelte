@@ -1,26 +1,38 @@
 <script lang="ts">
     import { createSwitch, melt } from '@melt-ui/svelte';
+    import { untrack } from 'svelte';
+
+    let { checked = $bindable(false) }: { checked?: boolean } = $props();
+
     const {
         elements: { root, input },
-        states: { checked }
-    } = createSwitch();
+        states: { checked: checkedStore }
+    } = createSwitch({
+        defaultChecked: untrack(() => checked),
+        onCheckedChange: ({ next }) => {
+            checked = next;
+            return next;
+        }
+    });
 
     $effect(() => {
-        console.log($checked);
+        if (checkedStore.get() !== checked) {
+            checkedStore.set(checked);
+        }
     });
 </script>
 
 <div class="flex items-center">
     <button
             use:melt={$root}
-            class:checked={$checked}
+            class:checked={$checkedStore}
             class="group relative h-6 cursor-pointer rounded-full
                  bg-blue-100 transition-colors
                  data-[state=checked]:bg-blue-300
                    data-[state=checked][&>*]:bg-red-200
             "
     >
-        <span class="thumb group-[.checked]:bg-blue-600 block rounded-full bg-blue-400 transition" />
+        <span class="thumb group-[.checked]:bg-blue-600 block rounded-full bg-blue-400 transition"></span>
     </button>
     <input use:melt={$input} />
 </div>

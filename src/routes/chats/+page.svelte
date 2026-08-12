@@ -6,8 +6,7 @@
 	import { deserialize } from '$app/forms';
 	import { browser } from '$app/environment';
 	import { twMerge } from 'tailwind-merge';
-	import DateTimeCol from "$components/other/DateTimeCol.svelte";
-	import { Pagination, Switch } from "$components";
+	import { Pagination, EditLineText } from "$components";
 
 	let { data }: PageProps = $props();
 
@@ -15,11 +14,11 @@
 	const dtCl = "px-4 border-b border-b-blue-100 border-x border-blue-100 transition-colors first:border-l-0 last:border-r-0 group-hover/tr:bg-blue-100 group-hover/tr:border-blue-200 group-[.last]/tr:border-b-0";
 	const dtControl = twMerge(dtCl, 'justify-center items-center');
 
-	async function removeSiteByDomain(domain: string) {
+	async function removeChatByChatId(chatId: string) {
 		const formData = new FormData();
-		formData.append('domain', domain);
+		formData.append('chatId', chatId);
 
-		const response = await fetch('?/removeSiteByDomain', {
+		const response = await fetch('?/removeChatByChatId', {
 			method: 'POST',
 			body: formData,
 			headers: { 'x-sveltekit-action': 'true' }
@@ -27,10 +26,10 @@
 		const result: ActionResult = deserialize(await response.text());
 
 		if (result.type === 'success') {
-			if (data.sites.length === 1 && data.currentPage > 1) {
+			if (data.chats.length === 1 && data.currentPage > 1) {
 				const previousPage = data.currentPage - 1;
 				const pageParam = previousPage > 1 ? `&page=${previousPage}` : '';
-				await goto(resolve(`/sites?page_size=${data.pageSize}${pageParam}`), {
+				await goto(resolve(`/chats?page_size=${data.pageSize}${pageParam}`), {
 					invalidateAll: true
 				});
 				return;
@@ -39,24 +38,57 @@
 			await invalidateAll();
 		}
 	}
+
+	async function updateChatName(chatId: string, name?: string) {
+		const formData = new FormData();
+		formData.append('chatId', chatId);
+		formData.append('name', name ?? '');
+
+		const response = await fetch('?/updateChatName', {
+			method: 'POST',
+			body: formData,
+			headers: { 'x-sveltekit-action': 'true' }
+		});
+		const result: ActionResult = deserialize(await response.text());
+
+		if (result.type === 'success') {
+			await invalidateAll();
+		}
+	}
+
+	async function updateChatId(chatId: string, newId?: string) {
+		const formData = new FormData();
+		formData.append('chatId', chatId);
+		formData.append('newId', newId ?? '');
+
+		const response = await fetch('?/updateChatId', {
+			method: 'POST',
+			body: formData,
+			headers: { 'x-sveltekit-action': 'true' }
+		});
+		const result: ActionResult = deserialize(await response.text());
+
+		if (result.type === 'success') {
+			await invalidateAll();
+		}
+	}
 </script>
 
 <svelte:head>
-	<title>Список сайтов</title>
+	<title>Список чатов</title>
 </svelte:head>
 
 <div class="mx-4 mt-4 mb-2">
-	<h2 class="font-bold text-[20px] md:text-[25px] xl:text-[30px]">Сайты</h2>
+	<h2 class="font-bold text-[20px] md:text-[25px] xl:text-[30px]">Чаты</h2>
 </div>
 
 <div class="h-full mx-4 mb-4 overflow-auto overflow-x-hidden rounded-xl bg-blue-50">
 		<table class="w-full">
 			<thead class="sticky top-0 w-full shadow-sm">
 				<tr class={ twMerge(trCl, 'text-blue-800 font-bold') }>
-					<td class="px-4 w-full">Сайт</td>
-					<td class="px-4 text-center min-w-[230px]">Количество чатов</td>
-					<td class="px-4 min-w-[230px]">Дата создания</td>
-					<td></td>
+					<td class="px-4">id чата</td>
+					<td class="px-4 min-w-[230px]">Название</td>
+					<td class="max-w-max"></td>
 				</tr>
 			</thead>
 
@@ -82,27 +114,18 @@
 
 
 {#snippet getSites()}
-	{#each data.sites as site, i (site.domain)}
-		<tr class={ trCl } class:last={data.sites.length === i + 1}>
+	{#each data.chats as chat, i (chat.chatId)}
+		<tr class={ trCl } class:last={data.chats.length === i + 1}>
 			<td class={ dtCl }>
 				<div class="flex items-center gap-2">
-					<a class="flex gap-1 items-center text-blue-800 hover:text-blue-600" href="https://{site.domain}">
-						<span>{site.domain}</span>
-						<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-3" viewBox="0 0 16 16">
-							<path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-							<path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-						</svg>
-					</a>
-
-					<Switch checked={true} />
+					<EditLineText text={chat.chatId} blurCallback={ async (newId) => await updateChatId(chat.chatId, newId) } maskOptions={{ mask: /^\d+$/ }} />
 				</div>
 			</td>
-			<td class={ twMerge(dtCl, 'text-center') }>{ site.chats.length }</td>
 			<td class={ dtCl }>
-				<DateTimeCol date={site.createdAt} />
+				<EditLineText text={chat.name ?? undefined} blurCallback={ async (name) => await updateChatName(chat.chatId, name) } />
 			</td>
 			<td class={ dtControl }>
-				<button aria-label="Удалить" type="button" class="flex items-center justify-center" onclick={ () => removeSiteByDomain(site.domain) }>
+				<button aria-label="Удалить" type="button" class="flex items-center justify-center" onclick={ () => removeChatByChatId(chat.chatId) }>
 					<svg class="cursor-pointer transition-all hover:text-red-500" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 32 32">
 						<path fill="currentColor" d="M17.414 16L26 7.414L24.586 6L16 14.586L7.414 6L6 7.414L14.586 16L6 24.586L7.414 26L16 17.414L24.586 26L26 24.586z"/>
 					</svg>

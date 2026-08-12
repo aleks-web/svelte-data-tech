@@ -1,18 +1,31 @@
 <script lang="ts">
     import { createPagination, melt } from '@melt-ui/svelte';
+    import { untrack } from 'svelte';
     import { twMerge } from "tailwind-merge";
-    import { type WritablePaginationType } from '$lib';
-    import { get } from 'svelte/store';
 
-    import { onMount } from 'svelte';
+    let {
+        class: className,
+        total,
+        count,
+        page: currentPage,
+        defaultPage,
+        size,
+        perPage,
+        onPageChange = $bindable((s) => s.next)
+    }: {
+        class?: string,
+        total?: number,
+        count?: number,
+        page?: number,
+        defaultPage?: number,
+        size?: number,
+        perPage?: number,
+        onPageChange?: (state: { curr: number, next: number }) => number
+    } = $props();
 
-    let { class: className, count, siblingCount = 1, pagination = $bindable(), onPageChange = (s) => s.next }: { class?: string, pagination: WritablePaginationType, count: number, siblingCount?: number, onPageChange?: (state: { curr: number, next: number }) => number } = $props();
-
-    const countElements = (() => count)();
-    const sibCount = (() => siblingCount)();
-    const onPageChangeFn = (() => onPageChange)();
-
-    const paginationData = get(pagination);
+    const resolvedTotal = $derived(total ?? count ?? 0);
+    const resolvedPage = $derived(currentPage ?? defaultPage ?? 1);
+    const resolvedSize = $derived(size ?? perPage ?? 5);
 
     const btn = `
 		flex items-center justify-center h-8 w-8 aspect-1 rounded-md border-1 border-blue-800 text-blue-800 text-sm transition-colors cursor-pointer
@@ -21,25 +34,29 @@
 		data-[selected]:bg-blue-900 data-[selected]:border-blue-900 data-[selected]:text-white data-[selected]:pointer-events-none data-[selected]:scale-105
 	`;
 
+    const pagination = createPagination({
+        count: untrack(() => resolvedTotal),
+        perPage: untrack(() => resolvedSize),
+        defaultPage: untrack(() => resolvedPage),
+        siblingCount: 1,
+        onPageChange
+    });
+
     const {
         elements: { root, pageTrigger, prevButton, nextButton },
-        states: { pages, page },
-    } = createPagination({
-        count: countElements, // countElements
-        perPage: paginationData.size, // perPageItems
-        defaultPage: paginationData.page, // defaultPaginationPage
-        siblingCount: sibCount, // siblingCount
-        onPageChange: onPageChangeFn
-    });
+        states: { pages, page: pageStore },
+        options
+    } = pagination;
 
-    onMount(() => {
-        pagination.subscribe((pagination) => {
-            page.set(pagination.page);
-        });
+    $effect(() => {
+        options.count.set(resolvedTotal);
+        options.perPage.set(resolvedSize);
+
+        if (pageStore.get() !== resolvedPage) {
+            pageStore.set(resolvedPage);
+        }
     });
 </script>
-
-{$pagination.page}
 
 <nav class={twMerge(className, "flex flex-col items-center gap-4")} aria-label="pagination" use:melt={$root}>
 
@@ -49,11 +66,11 @@
                 <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
             </svg>
         </button>
-        {#each $pages as page (page.key)}
-            {#if page.type === 'ellipsis'}
+        {#each $pages as pageItem (pageItem.key)}
+            {#if pageItem.type === 'ellipsis'}
                 <span>...</span>
             {:else}
-                <button class={btn} use:melt={$pageTrigger(page)}>{page.value}</button>
+                <button class={btn} use:melt={$pageTrigger(pageItem)}>{pageItem.value}</button>
             {/if}
         {/each}
         <button class={btn} use:melt={$nextButton}>

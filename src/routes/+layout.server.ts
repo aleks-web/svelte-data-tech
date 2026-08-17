@@ -7,6 +7,7 @@ export const load: LayoutServerLoad = async (event) => {
 	}
 
 	return {
-		user: event.locals.user
+		user: event.locals.user,
+		sidebarCollapsed: event.cookies.get('sidebar-collapsed') === 'true'
 	};
 };

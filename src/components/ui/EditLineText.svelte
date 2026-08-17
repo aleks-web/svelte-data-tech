@@ -2,10 +2,10 @@
     import IMask from 'imask';
     import { onMount } from 'svelte';
 
-    let { text = $bindable(), blurCallback, maskOptions }: { text?: string, blurCallback?: (text?: string) => void, maskOptions?: object } = $props();
+    let { text = $bindable(), blurCallback, maskOptions }: { text?: string | null, blurCallback?: (text?: string) => void, maskOptions?: object } = $props();
     let isActive = $state(false);
-    let isShow = $state(!!text);
     let inputElement = $state<HTMLInputElement>();
+    let hasText = $derived(typeof text === 'string' && text.trim().length > 0);
 
     $effect(() => {
         if (isActive) {
@@ -20,19 +20,15 @@
     })
 
     function onBlurHandler() {
-        if (text) {
-            isShow = false;
-        }
-
         isActive = false;
 
         if (blurCallback) {
-            blurCallback(text);
+            blurCallback(text ?? undefined);
         }
     }
 </script>
 
-{#if isShow || text}
+{#if isActive || hasText}
     <div class="flex items-center gap-0">
         <input bind:value={text}
                name="editLineText"
@@ -58,7 +54,7 @@
 {:else}
     <button
             type="button"
-            onclick={() => { isShow = true; isActive = true; }}
+            onclick={() => isActive = true}
             class="cursor-pointer border-1 text-blue-500 border-blue-500  py-1 px-2 rounded-md transition-colors
                  hover:bg-blue-500 hover:text-white"
     >Добавить</button>

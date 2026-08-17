@@ -125,7 +125,7 @@
 				<EditLineText text={chat.name ?? undefined} blurCallback={ async (name) => await updateChatName(chat.chatId, name) } />
 			</td>
 			<td class={ dtControl }>
-				<button aria-label="Удалить" type="button" class="flex items-center justify-center" onclick={ () => removeChatByChatId(chat.chatId) }>
+				<button aria-label="Удалить" type="button" class="ml-auto flex items-center justify-center" onclick={ () => removeChatByChatId(chat.chatId) }>
 					<svg class="cursor-pointer transition-all hover:text-red-500" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 32 32">
 						<path fill="currentColor" d="M17.414 16L26 7.414L24.586 6L16 14.586L7.414 6L6 7.414L14.586 16L6 24.586L7.414 26L16 17.414L24.586 26L26 24.586z"/>
 					</svg>

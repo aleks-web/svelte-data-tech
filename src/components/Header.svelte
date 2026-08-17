@@ -2,6 +2,7 @@
 	import { resolve } from "$app/paths";
 	import gravatarUrl from 'gravatar-url';
 	import { createAvatar, melt } from '@melt-ui/svelte';
+	import logo from "$lib/assets/logo.webp";
 
 	const {
 		elements: { image },
@@ -13,7 +14,7 @@
 
 <header class="relative flex h-(--header-height) flex-col items-center justify-between gap-4 rounded-2xl bg-(--color-block) px-6 py-4 sm:flex-row bg-white">
 	<div class="max-w-[135px] cursor-pointer">
-		test
+		<img src={logo} alt="logo">
 	</div>
 
 	<div class="flex w-full items-center justify-center gap-4 sm:justify-end">

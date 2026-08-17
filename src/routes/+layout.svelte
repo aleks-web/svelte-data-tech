@@ -1,13 +1,21 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+    import type { LayoutProps } from './$types';
     import { page } from '$app/state';
     import { resolve } from "$app/paths";
     import Header from "$components/Header.svelte";
     import Sidebar from "$components/Sidebar.svelte";
-    import { AddressBookOutline } from "flowbite-svelte-icons";
+    import { MessageDotsSolid, RectangleListSolid, BugSolid } from "flowbite-svelte-icons";
 
-	let { children } = $props();
+	let { children, data }: LayoutProps = $props();
+
+    let linkClass = `
+        flex items-center
+        border border-solid border-blue-200 flex min-w-max gap-1 text-blue-800 p-3 rounded-xl transition-all
+        [.active]:bg-blue-800 [.active]:text-white [.active]:border-blue-800 [.active]:pointer-events-none
+        hover:bg-blue-800 hover:text-white hover:border-blue-800
+    `;
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
@@ -17,26 +25,32 @@
         <Header />
 
         <div class="flex gap-[inherit]">
-            <Sidebar>
-                <a
-                        class:active={ page.route.id === resolve('/sites') }
-                        class="border-2 border-solid border-blue-800 flex min-w-max [.active]:bg-blue-800 [.active]:text-white gap-1 text-blue-800 hover:bg-blue-800 p-3 rounded-xl hover:text-blue-100 transition-all" href="{resolve('/sites')}">
-                    <AddressBookOutline class="w-6" />
-                    <span>Сайты</span>
+            <Sidebar collapsed={data.sidebarCollapsed}>
+                {#snippet children(isSidebarCollapsed)}
+                <a class:active={ page.route.id === resolve('/sites') }
+                        class:justify-center={isSidebarCollapsed}
+                        class={linkClass}
+                        href="{resolve('/sites')}">
+                    <RectangleListSolid class="w-6" />
+                    {#if !isSidebarCollapsed}<span>Сайты</span>{/if}
                 </a>
 
                 <a class:active={ page.route.id === resolve('/chats') }
-                        class="border-2 border-solid border-blue-800 flex min-w-max [.active]:bg-blue-800 [.active]:text-white gap-1 text-blue-800 hover:bg-blue-800 p-3 rounded-xl hover:text-blue-100 transition-all" href="{resolve('/chats')}">
-                    <AddressBookOutline class="w-6" />
-                    <span>Чаты</span>
+                        class:justify-center={isSidebarCollapsed}
+                        class={linkClass}
+                        href="{resolve('/chats')}">
+                    <MessageDotsSolid class="w-6" />
+                    {#if !isSidebarCollapsed}<span>Чаты</span>{/if}
                 </a>
 
-                <a
-                        class:active={ page.route.id === resolve('/test') }
-                        class="border-2 border-solid border-blue-800 flex min-w-max [.active]:bg-blue-800 [.active]:text-white gap-1 text-blue-800 hover:bg-blue-800 p-3 rounded-xl hover:text-blue-100 transition-all" href="{resolve('/test')}">
-                    <AddressBookOutline class="w-6" />
-                    <span>Test</span>
+                <a class:active={ page.route.id === resolve('/test') }
+                        class:justify-center={isSidebarCollapsed}
+                        class={linkClass}
+                        href="{resolve('/test')}">
+                    <BugSolid class="w-6" />
+                    {#if !isSidebarCollapsed}<span>Test</span>{/if}
                 </a>
+                {/snippet}
             </Sidebar>
 
             <div class="flex w-full flex-col bg-white gap-[inherit] overflow-x-hidden overflow-y-auto rounded-2xl h-[var(--content-height)]">

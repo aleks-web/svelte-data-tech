@@ -69,6 +69,6 @@ export const actions: Actions = {
 			return fail(500, { message: 'Unexpected error' });
 		}
 
-		return redirect(302, resolve(`/auth/up-success?mailReady=${email}`));
+		return redirect(303, resolve(`/auth/up-success?mailReady=${email}`));
 	}
 };

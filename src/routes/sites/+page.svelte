@@ -93,8 +93,6 @@
 							<path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
 						</svg>
 					</a>
-
-					<Switch checked={true} />
 				</div>
 			</td>
 			<td class={ twMerge(dtCl, 'text-center') }>{ site.chats.length }</td>

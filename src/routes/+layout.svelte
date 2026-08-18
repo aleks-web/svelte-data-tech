@@ -10,6 +10,8 @@
 
 	let { children, data }: LayoutProps = $props();
 
+    let isAuthRoute = $derived(page.route.id?.startsWith('/auth'));
+
     let linkClass = `
         flex items-center
         border border-solid border-blue-200 flex min-w-max gap-1 text-blue-800 p-3 rounded-xl transition-all
@@ -20,7 +22,7 @@
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-{#if page.route.id !== '/auth'}
+{#if !isAuthRoute}
     <div class="flex min-h-[inherit] flex-col gap-(--gap) overflow-hidden p-(--gap)">
         <Header />
 
@@ -59,5 +61,9 @@
         </div>
     </div>
 {:else}
-    {@render children()}
+    <div class="h-full p-(--gap) w-full">
+        <div class="flex w-full flex-col bg-white overflow-x-hidden overflow-y-auto rounded-2xl h-full">
+            {@render children()}
+        </div>
+    </div>
 {/if}
